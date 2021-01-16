@@ -1,0 +1,91 @@
+from flask import Flask
+from flask import request
+from flask import jsonify
+from flask_cors import CORS
+
+
+app = Flask(__name__)
+CORS(app)
+
+users = {
+   'users_list' :
+   [
+      {
+         'id' : 'xyz789',
+         'name' : 'Charlie',
+         'job': 'Janitor',
+      },
+      {
+         'id' : 'abc123',
+         'name': 'Mac',
+         'job': 'Bouncer',
+      },
+      {
+         'id' : 'ppp222',
+         'name': 'Mac',
+         'job': 'Professor',
+      },
+      {
+         'id' : 'yat999',
+         'name': 'Dee',
+         'job': 'Aspring actress',
+      },
+      {
+         'id' : 'zap555',
+         'name': 'Dennis',
+         'job': 'Bartender',
+      }
+   ]
+}
+
+@app.route('/')
+def hello_world():
+    return "hello world"
+
+@app.route('/users',methods = ['GET',"POST"])
+def get_users():
+   if request.method == 'GET':
+      user_ls =[]
+      search_username = request.args.get('name')
+      #parameter'name' of request
+      if search_username:
+         for user in users['users_list']:
+            if user['name'] == search_username:
+               user_ls.append(user)
+         return {'users_list': user_ls}
+      return users
+   elif request.method== "POST":
+      new_user = request.get_json()
+      users['users_list'].append(new_user)
+      resp = jsonify(success=True)
+      return resp
+
+
+@app.route('/users/<id>',methods = ['GET',"DELETE"])
+def get_user(id):
+   if id:
+      if request.method == "GET":
+         for user in users['users_list']:
+            if user['id'] == id:
+               return user
+         return ({})
+
+      elif request.method == "DELETE":
+         del_name = request.args.get('id')
+         for user in users['users_list']:
+            if user['name'] == del_name:
+               users['users_list'].remove(user)
+               return jsonify(success=True)
+         return jsonify(success=False)
+
+   return users
+
+
+@app.route('/users/<id>/<job>',methods = ['GET'])
+def get_users_with_job(id,job):
+   if id and job:
+      for user in users["users_list"]:
+         if(user['id']==id and user['job']==job):
+            return user
+      return ({})
+
