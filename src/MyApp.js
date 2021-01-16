@@ -15,7 +15,8 @@ function MyApp() {
   }, [] )
 
   function removeOneCharacter(index){
-      axios.delete(".../users/" +index.id)
+    console.log("here",characters[index].id)
+      axios.delete("http://localhost:5000/users/" +characters[index].id)
       const updated = characters.filter((character, i) => {
 	 return i !== index });
       setCharacters(updated);
@@ -45,7 +46,6 @@ function MyApp() {
 async function makePostCall(person){
  try {
     const response = await axios.post('http://localhost:5000/users', person);
-    console.log("loggg",response)
     return response;
  }
  catch(error) {
@@ -59,7 +59,6 @@ function updateList(person){
     if(result.status === 201){
       person.id= result.data.id;
       setCharacters([...characters,person]);
-      console.log("so hey;/")
     }
   });
 }
