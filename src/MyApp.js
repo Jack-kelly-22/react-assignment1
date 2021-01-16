@@ -28,10 +28,6 @@ function MyApp() {
   )     
 
 
- function updateList(person) {
-   setCharacters([...characters,person]);
- }
-
  
  async function fetchAll(){
    try{
@@ -49,6 +45,7 @@ function MyApp() {
 async function makePostCall(person){
  try {
     const response = await axios.post('http://localhost:5000/users', person);
+    console.log("loggg",response)
     return response;
  }
  catch(error) {
@@ -59,15 +56,13 @@ async function makePostCall(person){
 
 function updateList(person){
   makePostCall(person).then( result =>{
-    if(result.status == 201)
-     setCharacters([...characters,person]);
+    if(result.status === 201){
+      person.id= result.data.id;
+      setCharacters([...characters,person]);
+      console.log("so hey;/")
+    }
   });
 }
  
-
 }
-
-
-
-
 export default MyApp;
