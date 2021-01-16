@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Flask,Response
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
-
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -56,9 +56,10 @@ def get_users():
       return users
    elif request.method== "POST":
       new_user = request.get_json()
+      new_user['id'] = str(uuid.uuid1())
       users['users_list'].append(new_user)
-      resp = jsonify(success=True)
-      return resp
+      print(new_user)
+      return Response(new_user, status=201)
 
 
 @app.route('/users/<id>',methods = ['GET',"DELETE"])
